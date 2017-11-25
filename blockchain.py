@@ -32,6 +32,7 @@ def Register(arg):
 	_name = arg['name']
 	_time = arg['time']
 	_product = arg['product']
+	print ("====== REQUEST RESGISER ======\n")
 	compiled_sol = compile_source(contract_source_code) # Compiled source code
 	contract_interface = compiled_sol['<stdin>:contract_Register']
 
@@ -46,11 +47,9 @@ def Register(arg):
 
 	contract_address = w3.eth.getTransactionReceipt(tx_hash).contractAddress
 	print ('contract_address' + contract_address)
-
+	print ("==============================\n\n")
 	contract_instance = w3.eth.contract(contract_interface['abi'], contract_address, ContractFactoryClass=ConciseContract)
-	print ("Contract set : ".format(contract_instance.setLog(_name, _time, _product,transact={'from': w3.eth.coinbase,'gas':3000000})))
 	time.sleep(3)
-	print('Contract value: {}'.format(contract_instance.getLog()))	
 	return {"contract_addr":contract_address}
 
 def Search(arg):
@@ -58,6 +57,7 @@ def Search(arg):
 	compiled_sol = compile_source(contract_source_code) # Compiled source code
 	contract_interface = compiled_sol['<stdin>:contract_Register']
 
+	print ("====== REQUEST SEARCH ======\n")
 	provider = HTTPProvider('http://0.0.0.0:9945')
 	w3 = Web3(provider)
 
@@ -66,7 +66,7 @@ def Search(arg):
 	print ('tx_hash : ' + tx_hash)
 	
 	print ('contract_address : ' + str(contract_address))
-
+	print ("==============================\n\n")
 	contract_instance = w3.eth.contract(contract_interface['abi'], str(contract_address), ContractFactoryClass=ConciseContract)
 
 	value = contract_instance.getLog()
@@ -77,7 +77,7 @@ def Search(arg):
 if __name__=="__main__":
 	s = socket.socket()
 	host = "0.0.0.0"
-	port = 9946				
+	port = 9947				
 	s.bind((host, port))		
 	print (host)
 	s.listen(5)				 
