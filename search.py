@@ -33,7 +33,9 @@ provider = HTTPProvider('http://0.0.0.0:9945')
 w3 = Web3(provider)
 # Instantiate and deploy contract
 contract = w3.eth.contract(contract_interface['abi'], bytecode=contract_interface['bin'])
-contract_address = "0xcbcbc9fc0eabf0a3c2eaed69ebace988e1f58139"
+contract_address= "0x15f77723f8e7521effe9b02ec4f2b517c0a88e73"
+#contract_address = "0xcbcbc9fc0eabf0a3c2eaed69ebace988e1f58139"
+#contract_address = "0x46b3bdec8940a9f5810b3fcc31ef3933a4651a9f"
 print ('contract_address : ' + str(contract_address))
 # Contract instance in concise mode
 contract_instance = w3.eth.contract(contract_interface['abi'], contract_address, ContractFactoryClass=ConciseContract)
