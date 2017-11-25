@@ -9,18 +9,15 @@ contract_source_code = '''
 pragma solidity ^0.4.0;
 
 contract contract_Register {
-	string public name;
-	string public time;
-	string public product;
+	string public data;
+	
 
-	function setLog(string a, string b, string c) public {
-		name = a;
-		time = b;
-		product = c;
+	function setLog(string _data) public {
+		data = _data;
 	}
 
-	 function getLog() constant returns (string, string, string) {
-                return (name, time, product);
+	 function getLog() constant returns (string) {
+                return (data);
         }
 	
 }
@@ -29,9 +26,7 @@ contract contract_Register {
 
 
 def Register(arg):
-	_name = arg['name']
-	_time = arg['time']
-	_product = arg['product']
+	data = arg['data']
 	print ("====== REQUEST RESGISER ======\n")
 	compiled_sol = compile_source(contract_source_code) # Compiled source code
 	contract_interface = compiled_sol['<stdin>:contract_Register']
@@ -49,6 +44,7 @@ def Register(arg):
 	print ('contract_address' + contract_address)
 	print ("==============================\n\n")
 	contract_instance = w3.eth.contract(contract_interface['abi'], contract_address, ContractFactoryClass=ConciseContract)
+	contract_instance.setLog(data,transact={'from': w3.eth.coinbase,'gas':3000000})
 	time.sleep(3)
 	return {"contract_addr":contract_address}
 
@@ -69,8 +65,8 @@ def Search(arg):
 	print ("==============================\n\n")
 	contract_instance = w3.eth.contract(contract_interface['abi'], str(contract_address), ContractFactoryClass=ConciseContract)
 
-	value = contract_instance.getLog()
-	return {"name":value[0],"time":value[1],"product":value[2]}
+	data = contract_instance.getLog()
+	return data
 	
 
 
@@ -84,12 +80,13 @@ if __name__=="__main__":
 	while True:
 		c, addr = s.accept()
 		print('Got connection from', addr)
-		arg = json.loads(c.recv(1024).decode())
+		arg = c.recv(1024)
 		if arg["function"] == "register":
 			result = Register(arg)
 		elif arg["function"] == "search":
 			result = Search(arg)	
 		
-		c.send((json.dumps(result) + "\n").encode())
+		print ("[+] DATA : " + result)
+		c.send(result + "\n")
 		c.close()
 
