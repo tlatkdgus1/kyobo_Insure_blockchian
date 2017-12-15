@@ -1,0 +1,1 @@
+geth --rpc --rpcaddr 0.0.0.0 --rpcport 9945 --rpccorsdomain "*" console

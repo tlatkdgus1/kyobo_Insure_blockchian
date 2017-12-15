@@ -66,27 +66,27 @@ def Search(arg):
 	contract_instance = w3.eth.contract(contract_interface['abi'], str(contract_address), ContractFactoryClass=ConciseContract)
 
 	data = contract_instance.getLog()
-	return data
+	return {"data": data}
 	
 
 
 if __name__=="__main__":
 	s = socket.socket()
 	host = "0.0.0.0"
-	port = 9947				
+	port = 9946				
 	s.bind((host, port))		
-	print (host)
+	print (host+" : "+str(port))
 	s.listen(5)				 
 	while True:
 		c, addr = s.accept()
 		print('Got connection from', addr)
-		arg = c.recv(1024)
+		arg = json.loads(c.recv(1024).decode())
+		print (arg)
 		if arg["function"] == "register":
 			result = Register(arg)
 		elif arg["function"] == "search":
 			result = Search(arg)	
 		
-		print ("[+] DATA : " + result)
-		c.send(result + "\n")
+		c.send((json.dumps(result) + "\n").encode())
 		c.close()
 
